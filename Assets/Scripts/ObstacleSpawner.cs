@@ -14,7 +14,7 @@ public class ObstacleSpawner : MonoBehaviour
     public void InstantiateObstacle()
     {
         randomY = Random.Range(minY, maxY);// maxY ve minY arasada rastgele bir sayý (y koordinatý) oluþturuluyor.
-        GameObject newObstacle = Instantiate(obstacle);
+        GameObject newObstacle = Instantiate(obstacle); // referans obstacle nesnemizi çoðaltarak newObstacle nesnemize atýyoruz.
         newObstacle.transform.position = new Vector2(transform.position.x,randomY); // ObstacleSpawner bulunduðu x,y koordinatlarýnda bir engel oluþacak
     }
     void Start()

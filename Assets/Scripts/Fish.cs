@@ -8,7 +8,7 @@ public class Fish : MonoBehaviour
     public float speed;
     int angle;
     int maxAngle = 10;
-    int minAngle = -10;
+    int minAngle = -60;
 
     public Score score;
 
@@ -16,18 +16,15 @@ public class Fish : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
     }
-
-    // Update is called once per frame
     void Update()
     {
-
-        FishSwim();
-        FishRotation();
+        FishSwim();     
         transform.rotation = Quaternion.Euler(0,0,angle); // rotasyonu güncellemek için kullandýk
-
     }
-
-
+    void FixedUpdate()
+    {
+        FishRotation(); // Daha yumuþak bir hareket elde ediyoruz.
+    }             
     void FishSwim()
     {
         if (Input.GetMouseButtonDown(0))
@@ -35,7 +32,6 @@ public class Fish : MonoBehaviour
             _rb.velocity = new Vector2(_rb.velocity.x, speed);
         }
     }
-
     void FishRotation()
     {
         if (_rb.velocity.y > 0)
@@ -46,7 +42,7 @@ public class Fish : MonoBehaviour
             }
 
         }
-        else if (_rb.velocity.y < -2.5f)
+        else if (_rb.velocity.y < -1.2f)
         {
             if (angle >= minAngle)
             {
@@ -59,8 +55,10 @@ public class Fish : MonoBehaviour
     {
         if (collision.CompareTag("Obstacle"))
         {
-            score.Scored();
+            print("PUAN.....");
+           // score.Scored();
         }
     }
+    
 
 }
