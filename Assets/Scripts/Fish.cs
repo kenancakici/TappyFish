@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Fish : MonoBehaviour
 {
+    public GameManager gameManager;
     private Rigidbody2D _rb;
     public float speed;
     int angle;
@@ -11,6 +12,7 @@ public class Fish : MonoBehaviour
     int minAngle = -60;
 
     public Score score;
+    bool touchedGround; // Balýk yere deðidi mi
 
     void Start()
     {
@@ -19,15 +21,16 @@ public class Fish : MonoBehaviour
     void Update()
     {
         FishSwim();     
-        transform.rotation = Quaternion.Euler(0,0,angle); // rotasyonu güncellemek için kullandýk
+
     }
     void FixedUpdate()
     {
-        FishRotation(); // Daha yumuþak bir hareket elde ediyoruz.
-    }             
+        FishRotation(); // Update yerine, FixedUpdate içine yazdýðýmz için Daha yumuþak bir hareket elde ediyoruz.
+    }    
+    
     void FishSwim()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && GameManager.gameOver == false) // Mouse týklandýysa ve gameOver = false (Balýk ölmediyse) yukarý yönlü harekete devam et
         {
             _rb.velocity = new Vector2(_rb.velocity.x, speed);
         }
@@ -49,16 +52,50 @@ public class Fish : MonoBehaviour
                 angle = angle - 2;
             }
         }
+        if (touchedGround == false) // Eðer balýk yere deðmemiþse devam edecek
+        {
+            transform.rotation = Quaternion.Euler(0, 0, angle); // rotasyonu (AÇI) güncellemek için kullandýk
+        }
+
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Obstacle"))
+        if (collision.CompareTag("Obstacle")) // Obstacle geçildiye Puan al
+        {          
+           score.Scored();
+        }
+        else if (collision.gameObject.CompareTag("Column")) // Column'a temaa edildiye Oyun Sonu
         {
-            print("PUAN.....");
-           // score.Scored();
+            // Game Over
+            gameManager.GameOver();
         }
     }
-    
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            if (GameManager.gameOver == false)
+            {
+                // Game Over
+                gameManager.GameOver();
+                GameOver(); // Fish'deki GameOver fonksiyonu
+            }
+            else
+            {
+                // Game Over (Fish)
+                GameOver();
+            }
+        }        
+    }
+
+    // Fish'deki GameOver
+    void GameOver()
+    {
+        touchedGround = true;
+        transform.rotation = Quaternion.Euler(0, 0, -90);
+    }
 
 }

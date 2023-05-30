@@ -15,22 +15,27 @@ public class ObstacleSpawner : MonoBehaviour
     {
         randomY = Random.Range(minY, maxY);// maxY ve minY arasada rastgele bir sayý (y koordinatý) oluþturuluyor.
         GameObject newObstacle = Instantiate(obstacle); // referans obstacle nesnemizi çoðaltarak newObstacle nesnemize atýyoruz.
-        newObstacle.transform.position = new Vector2(transform.position.x,randomY); // ObstacleSpawner bulunduðu x,y koordinatlarýnda bir engel oluþacak
+        newObstacle.transform.position = new Vector2(transform.position.x, randomY); // ObstacleSpawner bulunduðu x,y koordinatlarýnda bir engel oluþacak
     }
     void Start()
     {
-        
+
     }
 
-    
+
     void Update()
     {
-        timer += Time.deltaTime;
-        if (timer >= maxTime)
+        if (GameManager.gameOver == false)
         {
-            // belirli zaman aralýðýnda engelimiz oluþturuluyor.
-            InstantiateObstacle();
-            timer = 0;
+            timer += Time.deltaTime;
+            if (timer >= maxTime)
+            {
+                // belirli zaman aralýðýnda engelimiz oluþturuluyor.
+                InstantiateObstacle();
+                timer = 0;
+            }
         }
+
+
     }
 }
