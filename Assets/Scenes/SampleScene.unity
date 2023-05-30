@@ -1190,6 +1190,7 @@ MonoBehaviour:
   gameManager: {fileID: 1979974228}
   speed: 5
   score: {fileID: 1130874111}
+  fishDied: {fileID: 320964020, guid: 69f53b775ccc23e4591b50ec7746cb32, type: 3}
 --- !u!95 &1882324249
 Animator:
   serializedVersion: 5

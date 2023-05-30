@@ -6,17 +6,23 @@ public class Fish : MonoBehaviour
 {
     public GameManager gameManager;
     private Rigidbody2D _rb;
-    public float speed;
-    int angle;
-    int maxAngle = 10;
-    int minAngle = -60;
+    public float speed; // Hýz
+    int angle; // Açý
+    int maxAngle = 10; // Maksimum açý
+    int minAngle = -60;  // minimum açý
 
-    public Score score;
-    bool touchedGround; // Balýk yere deðidi mi
+    public Score score; // Game Score
+    bool touchedGround; // Balýk yere deðdi mi
+    public Sprite fishDied; // Yeni bir sprite, Balýðýn son hali tek kare, ölmüþ hali
+    SpriteRenderer sp; // 
+
+    Animator anim;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        sp = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
     }
     void Update()
     {
@@ -96,6 +102,8 @@ public class Fish : MonoBehaviour
     {
         touchedGround = true;
         transform.rotation = Quaternion.Euler(0, 0, -90);
+        anim.enabled = false; // Balýk animasyonunu durdurur.
+        sp.sprite = fishDied; // Editorden girilen balýk sprite'ný SpriteRenderer eeþitleniyor
     }
 
 }
