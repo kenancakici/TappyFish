@@ -17,28 +17,45 @@ public class Fish : MonoBehaviour
     SpriteRenderer sp; // 
 
     Animator anim;
+    public ObstacleSpawner obstacleSpawner;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _rb.gravityScale = 0; // Yerçekimini sýfýrlýyoruz. Balýk havada asýlý kalýyor.
         sp = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
     }
     void Update()
     {
-        FishSwim();     
+        FishSwim();
 
     }
     void FixedUpdate()
     {
         FishRotation(); // Update yerine, FixedUpdate içine yazdýðýmz için Daha yumuþak bir hareket elde ediyoruz.
-    }    
-    
+    }
+
     void FishSwim()
     {
-        if (Input.GetMouseButtonDown(0) && GameManager.gameOver == false) // Mouse týklandýysa ve gameOver = false (Balýk ölmediyse) yukarý yönlü harekete devam et
+        // Mouse týklandýysa ve gameOver = false (Balýk ölmediyse) yukarý yönlü harekete devam et
+        if (Input.GetMouseButtonDown(0) && GameManager.gameOver == false)
         {
-            _rb.velocity = new Vector2(_rb.velocity.x, speed);
+            if (GameManager.gameStarted == false)
+            {
+                _rb.gravityScale = 1f;
+                _rb.velocity = Vector2.zero;
+                _rb.velocity = new Vector2(_rb.velocity.x, speed);// Hýza göre balýðýn y pozisyonu 
+                obstacleSpawner.InstantiateObstacle(); // Engel üretiliyor
+                //GameManager.gameStarted = true;
+                gameManager.GameHasStarted();
+            }
+            else
+            {
+                _rb.velocity = Vector2.zero;
+                _rb.velocity = new Vector2(_rb.velocity.x, speed);
+            }
+
         }
     }
     void FishRotation()
@@ -69,10 +86,10 @@ public class Fish : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Obstacle")) // Obstacle geçildiye Puan al
-        {          
-           score.Scored();
+        {
+            score.Scored();
         }
-        else if (collision.gameObject.CompareTag("Column")) // Column'a temaa edildiye Oyun Sonu
+        else if (collision.gameObject.CompareTag("Column")) // Column'a temas edildiyse Oyun Sonu
         {
             // Game Over
             gameManager.GameOver();
@@ -87,21 +104,21 @@ public class Fish : MonoBehaviour
             {
                 // Game Over
                 gameManager.GameOver();
-                GameOver(); // Fish'deki GameOver fonksiyonu
+                GameOver(); 
             }
-            else
-            {
-                // Game Over (Fish)
-                GameOver();
-            }
-        }        
+            //else
+            //{
+            //    // Game Over (Fish)
+            //    GameOver();
+            //}
+        }
     }
 
     // Fish'deki GameOver
     void GameOver()
     {
         touchedGround = true;
-        transform.rotation = Quaternion.Euler(0, 0, -90);
+        transform.rotation = Quaternion.Euler(0, 0, -90);// balýðý düzgün hale getirdik.
         anim.enabled = false; // Balýk animasyonunu durdurur.
         sp.sprite = fishDied; // Editorden girilen balýk sprite'ný SpriteRenderer eeþitleniyor
     }
