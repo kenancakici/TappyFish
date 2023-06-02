@@ -47,7 +47,6 @@ public class Fish : MonoBehaviour
                 _rb.velocity = Vector2.zero;
                 _rb.velocity = new Vector2(_rb.velocity.x, speed);// Hýza göre balýðýn y pozisyonu 
                 obstacleSpawner.InstantiateObstacle(); // Engel üretiliyor
-                //GameManager.gameStarted = true;
                 gameManager.GameHasStarted();
             }
             else
@@ -79,6 +78,7 @@ public class Fish : MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(0, 0, angle); // rotasyonu (AÇI) güncellemek için kullandýk
         }
+        
 
 
     }
@@ -93,6 +93,8 @@ public class Fish : MonoBehaviour
         {
             // Game Over
             gameManager.GameOver();
+            GameOver();
+
         }
     }
 

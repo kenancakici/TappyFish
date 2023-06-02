@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverPanel;
     public static bool gameStarted;
     public GameObject GetReady;
+    public static int gameScore;
+    public GameObject score;
+
 
 
     private void Awake()
@@ -40,6 +43,9 @@ public class GameManager : MonoBehaviour
     {
         gameOver=true;
         gameOverPanel.SetActive(true); // Score tablosunu görünür yapýyoruz
+        score.SetActive(false);
+        gameScore = score.GetComponent<Score>().GetScore();
+
     }
 
     // Update is called once per frame
