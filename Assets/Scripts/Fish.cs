@@ -19,6 +19,8 @@ public class Fish : MonoBehaviour
     Animator anim;
     public ObstacleSpawner obstacleSpawner;
 
+    [SerializeField] private AudioSource swim,hit,point;
+
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -41,6 +43,7 @@ public class Fish : MonoBehaviour
         // Mouse týklandýysa ve gameOver = false (Balýk ölmediyse) yukarý yönlü harekete devam et
         if (Input.GetMouseButtonDown(0) && GameManager.gameOver == false)
         {
+            swim.Play();
             if (GameManager.gameStarted == false)
             {
                 _rb.gravityScale = 1f;
@@ -88,14 +91,21 @@ public class Fish : MonoBehaviour
         if (collision.CompareTag("Obstacle")) // Obstacle geçildiye Puan al
         {
             score.Scored();
+            point.Play();
         }
-        else if (collision.gameObject.CompareTag("Column")) // Column'a temas edildiyse Oyun Sonu
+        else if (collision.gameObject.CompareTag("Column") && GameManager.gameOver == false) // Column'a temas edildiyse Oyun Sonu
         {
             // Game Over
+            FishDieEffect();
             gameManager.GameOver();
             GameOver();
 
         }
+    }
+
+    void FishDieEffect()
+    {
+        hit.Play();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -105,6 +115,7 @@ public class Fish : MonoBehaviour
             if (GameManager.gameOver == false)
             {
                 // Game Over
+                FishDieEffect();
                 gameManager.GameOver();
                 GameOver(); 
             }
@@ -120,7 +131,7 @@ public class Fish : MonoBehaviour
     void GameOver()
     {
         touchedGround = true;
-        transform.rotation = Quaternion.Euler(0, 0, -90);// balýðý düzgün hale getirdik.
+        transform.rotation = Quaternion.Euler(0, 0, -180);// balýðý düzgün hale getirdik.
         anim.enabled = false; // Balýk animasyonunu durdurur.
         sp.sprite = fishDied; // Editorden girilen balýk sprite'ný SpriteRenderer eeþitleniyor
     }
